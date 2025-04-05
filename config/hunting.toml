@@ -1,0 +1,20 @@
+[elk]
+prompt = """
+You're helping a hunter analyze a map for elk hunting.
+Elk are typically found in timbered ridges, north-facing slopes, and areas near water.
+Look for good feeding/bedding areas. Locate the top 3 areas in the onx map screenshot a hunter should look for elk.
+"""
+
+[black_bear]
+prompt = """
+You're helping a hunter locate areas to hunt black bears.
+They prefer thick brushy areas, berry patches, and sunny slopes in the spring.
+Locate the top 3 areas in the onx map screenshot a hunter should look for black bears.
+"""
+
+[mule_deer]
+prompt = """
+You're helping a hunter locate areas to hunt mule deer.
+They often bed in shaded areas during the day and move to open areas at dusk/dawn.
+Focus on benches, coulees, and transition zones. Locate the top 3 areas in the onx map screenshot a hunter should look for mule deer.
+"""
