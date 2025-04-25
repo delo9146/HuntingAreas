@@ -18,3 +18,11 @@ You're helping a hunter locate areas to hunt mule deer.
 They often bed in shaded areas during the day and move to open areas at dusk/dawn.
 Focus on benches, coulees, and transition zones. Locate the top 3 areas in the onx map screenshot a hunter should look for mule deer.
 """
+
+
+[map_legend]
+yellow = "Bureau of Land Management land"
+green = "National Forest land"
+red = "Private land"
+blue = "Water features"
+purple = "Motorized roads"

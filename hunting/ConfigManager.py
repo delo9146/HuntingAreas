@@ -1,18 +1,47 @@
+import toml
 import os
-import tomli
 
 class ConfigManager:
+    CONFIG_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "config", "hunting.toml")
+
     @staticmethod
-    def load_species_prompt(species: str, config_path: str = None) -> str:
-        if config_path is None:
-            base_path = os.path.dirname(os.path.dirname(__file__))  # go up from /hunting
-            config_path = os.path.join(base_path, "config", "hunting.toml")
+    def load_species_prompt(species: str) -> str:
+        if not os.path.exists(ConfigManager.CONFIG_PATH):
+            raise ValueError("Missing hunting.toml config file.")
 
-        with open(config_path, "rb") as f:
-            config = tomli.load(f)
+        config = toml.load(ConfigManager.CONFIG_PATH)
+        if species not in config:
+            raise ValueError(f"No prompt found for species '{species}' in hunting.toml")
 
-        species_lower = species.lower()
-        if species_lower not in config:
-            raise ValueError(f"Species '{species}' not found in config.")
+        return config[species]["prompt"]
 
-        return config[species_lower]["prompt"]
+    @staticmethod
+    def get_response_schema() -> str:
+        return (
+            "Respond only with JSON in the following format:\n\n"
+            "{\n"
+            '  "hunting_spots": [\n'
+            "    {\n"
+            '      "description": "Detaile rationale for why this is a good location.",\n'
+            '      "coordinates": {\n'
+            '        "x": 123,\n'
+            '        "y": 456\n'
+            "      }\n"
+            "    },\n"
+            "    ... (3 total spots)\n"
+            "  ]\n"
+            "}\n\n"
+            "Do not include any explanation or text outside of the JSON block."
+        )
+    
+    @staticmethod
+    def get_map_legend_description() -> str:
+        config = toml.load(ConfigManager.CONFIG_PATH)
+        if "map_legend" not in config:
+            return ""
+
+        legend_lines = [
+            f"- {color}: {desc}" for color, desc in config["map_legend"].items()
+        ]
+        return "The map uses the following color-coded legend:\n" + "\n".join(legend_lines)
+
