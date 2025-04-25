@@ -34,6 +34,12 @@ class ImageAnalysisManager:
             model=self.model,
             messages=[
                 {
+                    "role": "system",
+                    "content": ("You are a seasoned hunting guide skilled at analyzing maps to find optimal game locations."
+                                "Assume map orientation is standard: North is up, South is down, East is right, and West is left. "
+                    )
+                },
+                {
                     "role": "user",
                     "content": [
                         {"type": "text", "text": prompt},
