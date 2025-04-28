@@ -7,17 +7,36 @@ from hunting.waypointDrawer import WaypointDrawer
 def main():
     print("🐾 Welcome to the Hunting Area Analyzer")
     species = input("Enter the species you're hunting (e.g., elk, black_bear, mule_deer): ").strip()
+    state_abbr = input("Enter the 2-letter state abbreviation you're hunting in (e.g., MT, CO, WY):").strip()
+    month = input("Enter the month you're hunting in (e.g., September, October): ").strip()
+
+    
+    valid_months = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ]
+    if month.capitalize() not in valid_months:
+        raise ValueError(f"Invalid month '{month}'. Please enter a full month name like 'September' or 'October'.")
+
 
     try:
         # Load parts of the full prompt
         base_prompt = ConfigManager.load_species_prompt(species)
         legend_info = ConfigManager.get_map_legend_description()
+        full_state_name = ConfigManager.get_full_state_name(state_abbr)
         schema_prompt = ConfigManager.get_response_schema()
 
         # Combine into the full prompt
-        full_prompt = f"{base_prompt.strip()}\n\n{legend_info.strip()}\n\n{schema_prompt.strip()}"
+        full_prompt = (
+        f"You are analyzing a hunting map for the state of {full_state_name} during the month of {month.capitalize()}.\n\n"
+        f"{base_prompt.strip()}\n\n"
+        f"{legend_info.strip()}\n\n"
+        f"{schema_prompt.strip()}"
+        )
+
 
         print(f"\n Loaded prompt for '{species}'.\n")
+        print(f"\n You are hunting in '{full_state_name}' during the month of {month.capitalize()}. \n")
 
         # Get image files from data/input
         image_paths = fileManager.get_input_images()

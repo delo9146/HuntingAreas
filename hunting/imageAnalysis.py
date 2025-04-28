@@ -36,7 +36,7 @@ class ImageAnalysisManager:
                 {
                     "role": "system",
                     "content": ("You are a seasoned hunting guide skilled at analyzing maps to find optimal game locations."
-                                "Assume map orientation is standard: North is up, South is down, East is right, and West is left. "
+                                "Assume map orientation is standard: North is the top of the image, South is the bottom of the image, East is the right of the image, and West is the left of the image. "
                     )
                 },
                 {

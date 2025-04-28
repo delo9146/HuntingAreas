@@ -30,7 +30,7 @@ class WaypointDrawer:
 
         with Image.open(image_path) as img:
             draw = ImageDraw.Draw(img)
-            radius = 12
+            radius = 6
 
             # Load a default or system font
             try:
@@ -49,7 +49,7 @@ class WaypointDrawer:
 
                 draw.ellipse([(x - radius, y - radius), (x + radius, y + radius)], fill="red", outline="black")
                 label = f"{i + 1}"
-                draw.text((x + radius + 5, y - radius), label, fill="black", font=font)
+                draw.text((x + radius + 5, y - radius), label, fill="red", font=font)
 
             base = os.path.basename(image_path)
             name, ext = os.path.splitext(base)

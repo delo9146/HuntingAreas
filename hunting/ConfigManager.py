@@ -14,6 +14,18 @@ class ConfigManager:
             raise ValueError(f"No prompt found for species '{species}' in hunting.toml")
 
         return config[species]["prompt"]
+    
+    @staticmethod
+    def get_full_state_name(state_abbr: str) -> str:
+        config = toml.load(ConfigManager.CONFIG_PATH)
+        states = config.get("states", {})
+        full_name = states.get(state_abbr.upper())
+
+        if not full_name:
+            raise ValueError(f"Unknown state abbreviation '{state_abbr}' in hunting.toml")
+
+        return full_name
+
 
     @staticmethod
     def get_response_schema() -> str:
