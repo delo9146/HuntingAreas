@@ -18,25 +18,23 @@ class ImageAnalysisManager:
         with open(image_path, "rb") as img_file:
             return base64.b64encode(img_file.read()).decode("utf-8")
 
-    def get_image_dimensions(self, image_path):
-        with Image.open(image_path) as img:
-            return img.size  # (width, height)
-
     def analyze_image(self, image_path, prompt):
-        width, height = self.get_image_dimensions(image_path)
-        image_b64 = self.encode_image_to_base64(image_path)
+        grid_path = self.add_overlay_grid(image_path)
+        image_b64 = self.encode_image_to_base64(grid_path)
+
         image_data_url = f"data:image/png;base64,{image_b64}"
 
         # Extend the prompt with dimensions
-        prompt += f"\n\nThe image resolution is {width}x{height} pixels. Return 3 hunting spots with descriptions and estimated pixel coordinates (x, y). Format your response as JSON. Make sure to provide descriptions of the areas you chose and why you chose them."
+        prompt += "\n\nThe image includes a 20x20 grid overlay labeled A1 to T20. Return 3 hunting spots using those grid labels as 'grid_location'. Format your response as JSON."
 
         response = self.client.chat.completions.create(
             model=self.model,
             messages=[
                 {
                     "role": "system",
-                    "content": ("You are a seasoned hunting guide skilled at analyzing maps to find optimal game locations."
+                    "content": ("You are a seasoned hunting guide skilled at analyzing maps to find optimal game locations. Some images may contain a gray waypoint with the points coordinate information located to the left of the image"
                                 "Assume map orientation is standard: North is the top of the image, South is the bottom of the image, East is the right of the image, and West is the left of the image. "
+                                "You are also an expert in reading topographical and satellite imagery.  When presented with a map you will:\n\n• Read contour lines: tightly spaced lines indicate steep slopes, widely spaced lines gentler terrain; identify ridgelines, saddles, benches and valley bottoms.\n• Use hillshade or relief shading to confirm slope aspects and detect subtle terrain undulations.\n• Interpret color cues on satellite layers: deep greens for dense forest, lighter greens or tans for open grasslands or bare earth, blues for water bodies, and seasonal variations in vegetation.\n• Locate water sources (streams, ponds, riparian corridors) by following V‐shaped contour patterns or blue channels.\n• Assess habitat transitions (forest edge, meadows, clearcuts) for game travel corridors and feeding areas.\n• Read any overlaid grid or waypoint labels: gray waypoints include coordinate info to the left of the image—use those to tie your analysis back to real‐world lat/long or UTM coordinates.\n\nAlways translate what you see into actionable hunting advice—where animals are likely to bed, feed, or travel, and how to approach undetected given the terrain."
                     )
                 },
                 {
@@ -51,3 +49,35 @@ class ImageAnalysisManager:
         )
 
         return response.choices[0].message.content
+    
+    def add_overlay_grid(self, image_path: str, grid_size: int = 20) -> str:
+        from PIL import ImageDraw, ImageFont
+        img = Image.open(image_path).convert("RGB")
+        draw = ImageDraw.Draw(img)
+        width, height = img.size
+
+        # Calculate grid cell dimensions
+        cell_width = width // grid_size
+        cell_height = height // grid_size
+
+        # Draw grid
+        for i in range(grid_size):
+            for j in range(grid_size):
+                x0 = j * cell_width
+                y0 = i * cell_height
+                x1 = x0 + cell_width
+                y1 = y0 + cell_height
+                draw.rectangle([x0, y0, x1, y1], outline="gray")
+
+                label = f"{chr(65 + i)}{j+1}"
+                try:
+                    font = ImageFont.truetype("arial.ttf", 9)
+                except IOError:
+                    font = ImageFont.load_default()
+                draw.text((x0 + 5, y0 + 5), label, fill="black", font=font)
+
+        # Save new image with grid
+        overlay_path = image_path.replace(".png", "_grid.png")
+        img.save(overlay_path)
+        return overlay_path
+

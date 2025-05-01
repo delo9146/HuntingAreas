@@ -1,7 +1,6 @@
 [elk]
 prompt = """
-Elk are typically found in timbered ridges, north-facing slopes, and areas near water.
-Look for good feeding/bedding areas. Locate the top 3 areas in the onx map screenshot a hunter should look for elk.
+Elk are typically found in timbered ridges, north-facing slopes, and areas near water. Elk can also be found on shelves, which are relatively flat or gently sloping areas situated between steeper sections of terrain and favor ones facing north, north east, and north west. They also like meadows with water close to timber. Elk will typically be found at 8500 to 11000 feet of elevation if the image indicates those elevations put emphasis on those elevations. Look for areas using the provided information to locate the top 3 areas in the map screenshot a hunter should look for elk.
 """
 
 [black_bear]

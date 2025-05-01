@@ -1,5 +1,3 @@
-# hunting/WaypointDrawer.py
-
 import os
 import json
 import re
@@ -14,15 +12,11 @@ class WaypointDrawer:
         except json.JSONDecodeError:
             raise ValueError("Failed to parse GPT response as JSON.")
 
-        # Handle wrapped format like: {"hunting_spots": [...]}
+        # Only accept wrapped "hunting_spots" format (grid-based POC only)
         if isinstance(parsed, dict) and "hunting_spots" in parsed:
             return parsed["hunting_spots"]
 
-        # Handle plain list format
-        if isinstance(parsed, list):
-            return parsed
-
-        raise ValueError("Parsed response is not a list or a 'hunting_spots' dictionary.")
+        raise ValueError("Expected JSON object with 'hunting_spots' key.")
 
     @staticmethod
     def draw_waypoints(image_path: str, gpt_response: str, output_dir: str = None) -> str:
@@ -30,26 +24,33 @@ class WaypointDrawer:
 
         with Image.open(image_path) as img:
             draw = ImageDraw.Draw(img)
+            width, height = img.size
             radius = 6
+            grid_size = 20
+            cell_width = width // grid_size
+            cell_height = height // grid_size
 
-            # Load a default or system font
             try:
                 font = ImageFont.truetype("arial.ttf", 20)
             except IOError:
                 font = ImageFont.load_default()
 
             for i, loc in enumerate(locations):
-                coord = loc["coordinates"]
-                if isinstance(coord, dict):
-                    x, y = coord.get("x"), coord.get("y")
-                elif isinstance(coord, list):
-                    x, y = coord
-                else:
+                grid_label = loc.get("grid_location")
+                if not grid_label or len(grid_label) < 2:
                     continue
 
+                row_letter = grid_label[0].upper()
+                col_number = int(grid_label[1:])
+
+                row_index = ord(row_letter) - ord("A")
+                col_index = col_number - 1
+
+                x = col_index * cell_width + cell_width // 2
+                y = row_index * cell_height + cell_height // 2
+
                 draw.ellipse([(x - radius, y - radius), (x + radius, y + radius)], fill="red", outline="black")
-                label = f"{i + 1}"
-                draw.text((x + radius + 5, y - radius), label, fill="red", font=font)
+                draw.text((x + radius + 5, y - radius), f"{i + 1}", fill="red", font=font)
 
             base = os.path.basename(image_path)
             name, ext = os.path.splitext(base)

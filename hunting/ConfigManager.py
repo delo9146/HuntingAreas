@@ -34,17 +34,15 @@ class ConfigManager:
             "{\n"
             '  "hunting_spots": [\n'
             "    {\n"
-            '      "description": "Detaile rationale for why this is a good location.",\n'
-            '      "coordinates": {\n'
-            '        "x": 123,\n'
-            '        "y": 456\n'
-            "      }\n"
+            '      "description": "Detailed rationale for why this is a good location.",\n'
+            '      "grid_location": "A1"  // Row letter and column number\n'
             "    },\n"
             "    ... (3 total spots)\n"
             "  ]\n"
             "}\n\n"
             "Do not include any explanation or text outside of the JSON block."
         )
+
     
     @staticmethod
     def get_map_legend_description() -> str:
