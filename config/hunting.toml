@@ -36,3 +36,8 @@ NM = "New Mexico"
 NV = "Nevada"
 OR = "Oregon"
 WA = "Washington"
+
+[map_coordinates]
+[map_coordinates.oldBaldyFire]
+top_left = [45.5689, -112.18481]
+bottom_right = [45.5464, -112.14111]

@@ -54,4 +54,25 @@ class ConfigManager:
             f"- {color}: {desc}" for color, desc in config["map_legend"].items()
         ]
         return "The map uses the following color-coded legend:\n" + "\n".join(legend_lines)
+    
+    @staticmethod
+    def get_map_coordinates(image_name: str):
+        import os
+        base_name = os.path.splitext(os.path.basename(image_name))[0]  # Strip path and extension
+
+        config = toml.load(ConfigManager.CONFIG_PATH)
+        coords_section = config.get("map_coordinates", {})
+
+        if base_name not in coords_section:
+            raise ValueError(f"No coordinate mapping found for image '{base_name}' in hunting.toml.")
+
+        top_left = coords_section[base_name]["top_left"]
+        bottom_right = coords_section[base_name]["bottom_right"]
+
+        if not (isinstance(top_left, list) and isinstance(bottom_right, list) and
+                len(top_left) == 2 and len(bottom_right) == 2):
+            raise ValueError(f"Invalid coordinate format for '{base_name}' in hunting.toml.")
+
+        return tuple(top_left), tuple(bottom_right)
+
 

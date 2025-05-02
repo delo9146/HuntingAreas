@@ -76,8 +76,28 @@ class ImageAnalysisManager:
                     font = ImageFont.load_default()
                 draw.text((x0 + 5, y0 + 5), label, fill="black", font=font)
 
-        # Save new image with grid
+
         overlay_path = image_path.replace(".png", "_grid.png")
+
+        arrow_length = 50
+        padding = 20
+        x_center = width - padding
+        y_center = height - padding
+
+        draw.line([(x_center, y_center), (x_center, y_center - arrow_length)], fill="black", width=4)
+
+        draw.polygon([
+            (x_center - 5, y_center - arrow_length + 10),
+            (x_center + 5, y_center - arrow_length + 10),
+            (x_center, y_center - arrow_length)
+        ], fill="black")
+
+        try:
+            font = ImageFont.truetype("arial.ttf", 20)
+        except IOError:
+            font = ImageFont.load_default()
+        draw.text((x_center - 7, y_center - arrow_length - 25), "N", fill="black", font=font)
+
         img.save(overlay_path)
         return overlay_path
 
