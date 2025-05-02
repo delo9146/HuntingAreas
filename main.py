@@ -20,7 +20,6 @@ def main():
 
 
     try:
-        # Load parts of the full prompt
         base_prompt = ConfigManager.load_species_prompt(species)
         legend_info = ConfigManager.get_map_legend_description()
         full_state_name = ConfigManager.get_full_state_name(state_abbr)
@@ -31,7 +30,6 @@ def main():
         print(f"\n Loaded prompt for '{species}'.\n")
         print(f"\n You are hunting in '{full_state_name}' during the month of {month.capitalize()}. \n")
 
-        # Get image files from data/input
         image_paths = fileManager.get_input_images()
         if not image_paths:
             print("  No image files found in data/input. Add screenshots and try again.")
@@ -58,11 +56,9 @@ def main():
 
 
             try:
-                # Step 1: Analyze with GPT-4 Vision
                 gpt_response = analyzer.analyze_image(image_path, prompt=full_prompt)
                 print(f" GPT Response for {os.path.basename(image_path)}:\n{gpt_response}\n{'-'*60}\n")
-
-                # Step 2: Draw waypoints on the image
+                
                 output_image_path = WaypointDrawer.draw_waypoints(image_path, gpt_response)
                 print(f" ✅ Marked-up map saved to: {output_image_path}\n")
 

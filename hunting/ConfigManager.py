@@ -58,7 +58,7 @@ class ConfigManager:
     @staticmethod
     def get_map_coordinates(image_name: str):
         import os
-        base_name = os.path.splitext(os.path.basename(image_name))[0]  # Strip path and extension
+        base_name = os.path.splitext(os.path.basename(image_name))[0] 
 
         config = toml.load(ConfigManager.CONFIG_PATH)
         coords_section = config.get("map_coordinates", {})

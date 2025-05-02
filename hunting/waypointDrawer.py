@@ -23,7 +23,7 @@ class WaypointDrawer:
         lat1, lon1 = top_left
         lat2, lon2 = bottom_right
 
-        # Use width - 1 and height - 1 to cover full image span
+        
         x_frac = px / (image_width - 1)
         y_frac = py / (image_height - 1)
 

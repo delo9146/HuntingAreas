@@ -12,7 +12,7 @@ class ImageAnalysisManager:
     def __init__(self):
         self.api_key = os.getenv("OPENAI_API_KEY")
         self.client = OpenAI(api_key=self.api_key)
-        self.model = "gpt-4o"  # or gpt-4-vision-preview if you're testing that
+        self.model = "gpt-4o" 
 
     def encode_image_to_base64(self, image_path):
         with open(image_path, "rb") as img_file:
@@ -24,7 +24,6 @@ class ImageAnalysisManager:
 
         image_data_url = f"data:image/png;base64,{image_b64}"
 
-        # Extend the prompt with dimensions
         prompt += "\n\nThe image includes a 20x20 grid overlay labeled A1 to T20. Return 3 hunting spots using those grid labels as 'grid_location'. Format your response as JSON."
 
         response = self.client.chat.completions.create(
@@ -56,11 +55,11 @@ class ImageAnalysisManager:
         draw = ImageDraw.Draw(img)
         width, height = img.size
 
-        # Calculate grid cell dimensions
+        
         cell_width = width // grid_size
         cell_height = height // grid_size
 
-        # Draw grid
+        
         for i in range(grid_size):
             for j in range(grid_size):
                 x0 = j * cell_width
