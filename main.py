@@ -26,13 +26,6 @@ def main():
         full_state_name = ConfigManager.get_full_state_name(state_abbr)
         schema_prompt = ConfigManager.get_response_schema()
 
-        # Combine into the full prompt
-        full_prompt = (
-        f"You are analyzing a hunting map for the state of {full_state_name} during the month of {month.capitalize()}.\n\n"
-        f"{base_prompt.strip()}\n\n"
-        f"{legend_info.strip()}\n\n"
-        f"{schema_prompt.strip()}"
-        )
 
 
         print(f"\n Loaded prompt for '{species}'.\n")
@@ -48,6 +41,21 @@ def main():
 
         for image_path in image_paths:
             print(f" Processing image: {os.path.basename(image_path)}")
+
+            top_left, bottom_right = ConfigManager.get_map_coordinates(image_path)
+            gps_context = (
+            f"The top-left corner of the image corresponds to latitude {top_left[0]:.6f}, "
+            f"longitude {top_left[1]:.6f}; and the bottom-right corner corresponds to "
+            f"latitude {bottom_right[0]:.6f}, longitude {bottom_right[1]:.6f}.\n\n"
+        )
+            full_prompt = (
+            f"You are analyzing a hunting map for the state of {full_state_name} during the month of {month.capitalize()}.\n\n"
+            f"{gps_context}"
+            f"{base_prompt.strip()}\n\n"
+            f"{legend_info.strip()}\n\n"
+            f"{schema_prompt.strip()}"
+        )
+
 
             try:
                 # Step 1: Analyze with GPT-4 Vision
