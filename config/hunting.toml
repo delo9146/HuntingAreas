@@ -1,6 +1,6 @@
 [elk]
 prompt = """
-Elk are typically found in timbered ridges, north-facing slopes, and areas near water. Elk can also be found on shelves, which are relatively flat or gently sloping areas situated between steeper sections of terrain and favor ones facing north, north east, and north west. They also like meadows with water close to timber. Look for areas using the provided information to locate the top 3 areas in the map screenshot a hunter should look for elk.
+Elk are typically found in timbered ridges, and areas near water. Elk can also be found on shelves, which are relatively flat or gently sloping areas situated between steeper sections of terrain and favor ones facing north, north east, and north west. They also like meadows with water close to timber. Look for areas using the provided information to locate the top 3 areas in the map screenshot a hunter should look for elk.
 """
 
 [black_bear]
